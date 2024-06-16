@@ -28,6 +28,11 @@
         <link href="assets/css/style.css" rel="stylesheet" />
         <link href="css/common.css" rel="stylesheet" type="text/css" />
         <link href="css/responsive.css" rel="stylesheet" type="text/css" />
+        <style>
+            .error{
+                color:red;
+            }
+        </style>
     </head>
 
     <body>
@@ -93,7 +98,18 @@
                                 <!-- </div> -->
                             <!-- </div> -->
                             <div class="schedule-call">
-                                <button class="btn green-btn" data-bs-toggle="modal" data-bs-target="#login"><img src="images/login.svg" class="" /> <span>Login</span></button>
+                                @if($_SERVER['REQUEST_URI'] =='/register')
+                                    <button class="btn green-btn" data-bs-toggle="modal" data-bs-target="#login"><img src="images/login.svg" class="" /> <span>Register</span></button>
+                                @else
+                                <?php
+                                if(!Session::get('userid')){?>
+                                    <button class="btn green-btn" data-bs-toggle="modal" data-bs-target="#login"><img src="images/login.svg" class="" /> <span>Login</span></button>
+                                <?php } ?>
+                                <?php
+                                if(Session::get('userid')){?>
+                                    <a href="logout"><button class="btn green-btn"><img src="images/login.svg" class="" /> <span>Logout</span></button></a>
+                                <?php } ?>
+                                @endif
                             </div>
 
                             <div class="mobile-icon">
@@ -1234,8 +1250,7 @@
             </footer>
             <div class="overlay-body"></div>
         </div>
-
-        <script src="assets/js/jquery.min.js"></script>
+         <!-- <script src="assets/js/jquery.min.js"></script> -->
         <script src="assets/js/popper.min.js"></script>
         <script src="assets/js/bootstrap.min.js"></script>
         <script src="assets/js/dropzone.min.js"></script>
@@ -1247,8 +1262,8 @@
         <script src="assets/js/counterup.min.js"></script>
         <script src="assets/js/prism.js"></script>
         <script src="assets/js/addadult.js"></script>
-        <script src="assets/js/custom.js"></script>
+        <!-- <script src="assets/js/custom.js"></script>
         <script src="js/owl.carousel.js"></script>
-        <script src="js/main.js"></script>
+        <script src="js/main.js"></script>  -->
     </body>
 </html>

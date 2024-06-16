@@ -13,16 +13,16 @@ class LoginController extends Controller
         return view('auth.login');
     }
 
-    public function login(Request $request)
-    {
-        $credentials = $request->only('email', 'password');
+    // public function login(Request $request)
+    // {
+    //     $credentials = $request->only('email', 'password');
 
-        if (Auth::attempt($credentials)) {
-            // Authentication passed
-            return redirect()->intended('/');
-        } else {
-            // Authentication failed
-            return back()->withErrors(['email' => 'Invalid credentials']);
-        }
-    }
+    //     if (Auth::attempt($credentials)) {
+    //         // Authentication passed
+    //         return redirect()->intended('/');
+    //     } else {
+    //         // Authentication failed
+    //         return back()->withErrors(['email' => 'Invalid credentials']);
+    //     }
+    // }
 }

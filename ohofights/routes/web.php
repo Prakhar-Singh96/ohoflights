@@ -1,6 +1,18 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Admin\AdminController;
+
+use App\Http\Controllers\Frontend\HomePageController;
+use App\Http\Controllers\Frontend\AboutController;
+use App\Http\Controllers\Frontend\FlightController;
+use App\Http\Controllers\Frontend\HotelController;
+use App\Http\Controllers\Frontend\PackageController;
+use App\Http\Controllers\Frontend\RailwayController;
+use App\Http\Controllers\Frontend\ContactController;
+use App\Http\Controllers\Auth\LoginController;
+use App\Http\Controllers\Auth\RegisterController;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -17,10 +29,14 @@ use Illuminate\Support\Facades\Route;
 //     return view('welcome');
 // });
 
-Route::group(['namespace' => 'Frontend', 'as' => 'frontend.'], function () {
-    include_route_files(__DIR__ . '/frontend/');
-});
+Route::post('registration',[AdminController::class,'registration']);
+Route::post('register_by_admin',[AdminController::class,'registerByAdmin']);
+Route::post('login',[AdminController::class,'login']);
+Route::get('dashboard',[AdminController::class,'dashboard']);
+Route::get('logout', [AdminController::class,'logout']);
 
-Route::group(['namespace' => 'Backend', 'as' => 'backend.'], function () {
-    include_route_files(__DIR__ . '/backend/');
-});
+/** By Prakhar */
+Route::get('/', [HomePageController::class, 'index'])->name('home');
+Route::get('/', [LoginController::class, 'showLoginForm'])->name('login');
+Route::get('/register', [RegisterController::class, 'showRegistrationForm'])->name('register');
+// Route::post('/register', [RegisterController::class, 'register']);
