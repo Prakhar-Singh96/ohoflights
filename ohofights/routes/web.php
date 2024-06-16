@@ -13,6 +13,14 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
+// Route::get('/', function () {
+//     return view('welcome');
+// });
+
+Route::group(['namespace' => 'Frontend', 'as' => 'frontend.'], function () {
+    include_route_files(__DIR__ . '/frontend/');
+});
+
+Route::group(['namespace' => 'Backend', 'as' => 'backend.'], function () {
+    include_route_files(__DIR__ . '/backend/');
 });
