@@ -32,7 +32,7 @@ use App\Http\Controllers\Auth\RegisterController;
 Route::post('registration',[AdminController::class,'registration']);
 Route::post('register_by_admin',[AdminController::class,'registerByAdmin']);
 Route::post('login',[AdminController::class,'login']);
-Route::get('dashboard',[AdminController::class,'dashboard']);
+Route::get('about-us',[AdminController::class,'aboutUs']);
 Route::get('logout', [AdminController::class,'logout']);
 
 /** By Prakhar */
