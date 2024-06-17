@@ -182,11 +182,8 @@ class AdminController extends Controller
         }
 
     }
-    public function dashboard(){
-        if(!Session::get('userid')){
-            return redirect('/');
-        }
-        echo '<a href="logout">Logout</a>';
+    public function aboutUs(){
+        return view('about-us');
     }
     public function logout(){
         Session::flush();
