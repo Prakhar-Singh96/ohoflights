@@ -106,6 +106,14 @@ $('#loginbtn').click(function(){
                         window.location.href="";
                     }, 2000);
                 }
+                if(result.code == 201){
+                    $('#loginbtn').hide();
+                    $('#errorMsg').html(result.msg);
+                    $('#errorMsg').css('color','green');
+                    setTimeout(() => {
+                        window.location.href="admin-dashboard";
+                    }, 2000);
+                }
             }
         });
 });
