@@ -34,6 +34,7 @@ Route::post('register_by_admin',[AdminController::class,'registerByAdmin']);
 Route::post('login',[AdminController::class,'login']);
 Route::get('about-us',[AdminController::class,'aboutUs']);
 Route::get('logout', [AdminController::class,'logout']);
+Route::get('profile', [AdminController::class,'profile']);
 
 /** By Prakhar */
 Route::get('/', [HomePageController::class, 'index'])->name('home');

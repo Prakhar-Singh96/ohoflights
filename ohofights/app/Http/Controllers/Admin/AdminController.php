@@ -173,6 +173,7 @@ class AdminController extends Controller
             Session::put('email', $checkCred[0]->email);
             Session::put('password', $checkCred[0]->password);
             Session::put('accessid', $checkCred[0]->role);
+            Session::put('user_created_on', $checkCred[0]->created_at);
             return json_encode(
                 [
                     'msg'=>'Login Successfull',
@@ -184,6 +185,9 @@ class AdminController extends Controller
     }
     public function aboutUs(){
         return view('about-us');
+    }
+    public function profile(){
+        return view('profile');
     }
     public function logout(){
         Session::flush();
