@@ -5,6 +5,6 @@
     </tr>
     <tr>
         <th><?php echo Session::get('email'); ?></th>
-        <th><?php echo date('d-m-Y',Session::get('user_created_on')); ?></th>
+        <th><?php echo Session::get('user_created_on'); ?></th>
     </tr>
 </table>

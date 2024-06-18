@@ -174,6 +174,14 @@ class AdminController extends Controller
             Session::put('password', $checkCred[0]->password);
             Session::put('accessid', $checkCred[0]->role);
             Session::put('user_created_on', $checkCred[0]->created_at);
+            if(Session::get('accessid') == 1){
+                return json_encode(
+                    [
+                        'msg'=>'Login Successfull',
+                        'code'=>201
+                    ]
+                );
+            }
             return json_encode(
                 [
                     'msg'=>'Login Successfull',
