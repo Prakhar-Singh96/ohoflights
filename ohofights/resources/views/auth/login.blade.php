@@ -98,8 +98,8 @@ $('#loginbtn').click(function(){
                     $('.errorPassword').html('');
                     $('.errorEmail').html('');
                 }, 7000);
-                console.log(result.code)
                 if(result.code == 200){
+                    $('#loginbtn').hide();
                     $('#errorMsg').html(result.msg);
                     $('#errorMsg').css('color','green');
                     setTimeout(() => {

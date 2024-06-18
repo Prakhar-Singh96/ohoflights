@@ -32,6 +32,47 @@
             .error{
                 color:red;
             }
+            /** Logout Dropdown */
+            .dropbtn {
+            background-color: #4CAF50;
+            color: white;
+            padding: 8px;
+            font-size: 16px;
+            border: none;
+            cursor: pointer;
+            }
+
+            .dropdown {
+            position: relative;
+            display: inline-block;
+            }
+
+            .dropdown-content {
+            display: none;
+            position: absolute;
+            background-color: #f9f9f9;
+            min-width: 160px;
+            box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+            z-index: 1;
+            }
+
+            .dropdown-content a {
+            color: black;
+            padding: 12px 16px;
+            text-decoration: none;
+            display: block;
+            }
+
+            .dropdown-content a:hover {background-color: #f1f1f1}
+
+            .dropdown:hover .dropdown-content {
+            display: block;
+            }
+
+            .dropdown:hover .dropbtn {
+            background-color: #3e8e41;
+            }
+            /** Logout Dropdown  End */
         </style>
     </head>
 
@@ -107,7 +148,14 @@
                                 <?php } ?>
                                 <?php
                                 if(Session::get('userid')){?>
-                                    <a href="logout"><button class="btn green-btn"><img src="images/login.svg" class="" /> <span>Logout</span></button></a>
+                                    <!-- <a href="logout"><button class="btn green-btn"><img src="images/login.svg" class="" /> <span>Logout</span></button></a> -->
+                                    <div class="dropdown">
+                                        <button class="dropbtn">Welcome</button>
+                                        <div class="dropdown-content">
+                                            <a href="profile">Profile</a>
+                                            <a href="logout">Logout</a>
+                                        </div>
+                                    </div>
                                 <?php } ?>
                                 @endif
                             </div>
