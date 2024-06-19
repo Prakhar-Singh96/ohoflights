@@ -152,7 +152,7 @@ class AdminController extends Controller
             }
         }
     }
-    public function login(){
+    /* public function login(){
         // return redirect('dashboard');
         $email = $_REQUEST['email'];
         $password = $_REQUEST['password'];
@@ -178,25 +178,132 @@ class AdminController extends Controller
                 return json_encode(
                     [
                         'msg'=>'Login Successfull',
-                        'code'=>201
+                        'code'=>201,
+                        'url' => url('/admin/dashboard')
                     ]
                 );
             }
             return json_encode(
                 [
                     'msg'=>'Login Successfull',
-                    'code'=>200
+                    'code'=>200,
+                    'url' => url('/')
                 ]
             );
         }
 
+    } */
+
+    public function login() {
+        // return redirect('dashboard');
+        $email = $_REQUEST['email'];
+        $password = $_REQUEST['password'];
+        $flag = 'login';
+        if ($this->validateForm($email, $password, $flag)) {
+            return $this->validateForm($email, $password, $flag);
+        }
+        $checkCred = DB::select('SELECT * FROM users WHERE email = ? AND password =?', array($email, MD5($password)));
+        if (count($checkCred) == 0) {
+            return json_encode([
+                'errorMsg' => 'Login Credential does not match with our records'
+            ]);
+        }
+        if ($checkCred[0]) {
+            // Login Success
+            $userId = $checkCred[0]->id;
+            Session::put('userid', $userId);
+            Session::put("email_$userId", $checkCred[0]->email);
+            Session::put("password_$userId", $checkCred[0]->password);
+            Session::put("role_$userId", $checkCred[0]->role);
+            Session::put("login_time_$userId", now());
+
+            if (Session::get("role_$userId") == 1) {
+                return json_encode(
+                    [
+                        'msg' => 'Login Successfull',
+                        'code' => 201,
+                        'url' => url('/admin/dashboard')
+                    ]
+                );
+            }
+            return json_encode(
+                [
+                    'msg' => 'Login Successfull',
+                    'code' => 200,
+                    'url' => url('/')
+                ]
+            );
+        }
     }
+
+
+    public function dashboard() {
+        return view('admin.dashboard');
+    }
+
+    public function userDetails() {
+        // Fetch all users
+        $users = DB::table('users')->get();
+        
+        // Fetch currently logged-in users
+        $loggedInUsers = Session::all(); // Assuming you store logged-in users in session
+
+        return view('admin.userdetails', compact('users', 'loggedInUsers'));
+    } 
+
+    public function userRegisterDetails()
+    {
+        // Fetch all users
+        $users = DB::table('users')->where('role', 2)->get();
+
+        // Count the number of normal users
+        $normalUserCount = $users->where('role', 2)->count();
+
+        return view('admin.user-register-details', compact('users', 'normalUserCount'));
+    }
+
+    public function userLoginDetails(){
+        // Fetch currently logged-in users from the session
+        $loggedInUsers = Session::all();
+
+        // Filter and format logged-in user details
+        $loginDetails = [];
+        foreach ($loggedInUsers as $key => $value) {
+            if (strpos($key, 'email') !== false) {
+                $userId = str_replace('email_', '', $key);
+                $loginDetails[] = [
+                    'email' => $value,
+                    'role' => Session::get("role_$userId") == 1 ? 'Admin' : 'Normal User',
+                    'login_time' => Session::get("login_time_$userId")
+                ];
+            }
+        }
+
+        return view('admin.user-login-details', compact('loginDetails'));
+    }
+
     public function aboutUs(){
         return view('about-us');
     }
-    public function profile(){
+
+    public function profile() {
+        $userId = Session::get('userid');
+
+        if (Session::get("role_$userId") == 1) {
+            return view('admin.profile');
+        }
+
         return view('profile');
     }
+
+    public function aboutUsContent() {
+        return view('admin.about-us-content');
+    }
+
+    public function aboutUsImage() {
+        return view('admin.about-us-image');
+    }
+
     public function logout(){
         Session::flush();
         return redirect('/');

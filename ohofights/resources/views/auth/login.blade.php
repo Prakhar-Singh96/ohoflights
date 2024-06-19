@@ -1,6 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
+<div class="modal fade" id="login" tabindex="-1" role="dialog" aria-labelledby="loginmodal" aria-hidden="true">
 <div class="modal-dialog modal-dialog-centered login-pop-form" role="document">
     <div class="modal-content">
         <div class="modal-header">
@@ -16,14 +17,6 @@
             <div class="modal-login-form py-4 px-md-3 px-0">
                 <form id="loginform" method="POST" action="login">
                     @csrf
-                    <!-- <div class="form-floating mb-4">
-                        <input type="email" name="email" class="form-control" placeholder="name@example.com"  />
-                        <label>Email Address</label>
-                    </div>
-                    <div class="form-floating mb-4">
-                        <input type="password" name="password" class="form-control" placeholder="Password"  />
-                        <label>Password</label>
-                    </div> -->
                     <div class="row">
                         <div class="form-floting col-md-12">
                         <label>Email Address</label>
@@ -58,6 +51,7 @@
             <p>Don't have an account yet? <a href="{{ url('register') }}" class="text-primary fw-medium ms-1">Sign Up</a></p>
         </div>
     </div>
+</div>
 </div>
 <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.20.0/jquery.validate.min.js" integrity="sha512-WMEKGZ7L5LWgaPeJtw9MBM4i5w5OSBlSjTjCtSnvFJGSVD26gE5+Td12qN5pvWXhuWaWcVwF++F7aqu9cvqP0A==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
@@ -98,20 +92,12 @@ $('#loginbtn').click(function(){
                     $('.errorPassword').html('');
                     $('.errorEmail').html('');
                 }, 7000);
-                if(result.code == 200){
+                if(result.code == 200 || result.code == 201){
                     $('#loginbtn').hide();
                     $('#errorMsg').html(result.msg);
                     $('#errorMsg').css('color','green');
                     setTimeout(() => {
-                        window.location.href="";
-                    }, 2000);
-                }
-                if(result.code == 201){
-                    $('#loginbtn').hide();
-                    $('#errorMsg').html(result.msg);
-                    $('#errorMsg').css('color','green');
-                    setTimeout(() => {
-                        window.location.href="admin-dashboard";
+                        window.location.href = result.url;
                     }, 2000);
                 }
             }
