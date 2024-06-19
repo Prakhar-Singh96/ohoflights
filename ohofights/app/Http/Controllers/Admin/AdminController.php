@@ -216,7 +216,9 @@ class AdminController extends Controller
             Session::put("password_$userId", $checkCred[0]->password);
             Session::put("role_$userId", $checkCred[0]->role);
             Session::put("login_time_$userId", now());
-
+            DB::table('user_log')->insert(
+                ['userid' => Session::get('userid')]
+            );
             if (Session::get("role_$userId") == 1) {
                 return json_encode(
                     [
@@ -263,21 +265,29 @@ class AdminController extends Controller
 
     public function userLoginDetails() {
         // Fetch currently logged-in users from the session
-        $loggedInUsers = Session::all();
+        // $loggedInUsers = Session::all();
 
-        // Filter and format logged-in user details
-        $loginDetails = [];
+        // // Filter and format logged-in user details
+        // $loginDetails = [];
+        // foreach ($loggedInUsers as $key => $value) {
+        //     if (strpos($key, 'email') !== false) {
+        //         $userId = str_replace('email_', '', $key);
+        //         $loginDetails[] = [
+        //             'email' => $value,
+        //             'role' => Session::get("role_$userId") == 1 ? 'Admin' : 'Normal User',
+        //             'login_time' => Session::get("login_time_$userId")
+        //         ];
+        //     }
+        // }
+
+        $loggedInUsers = DB::select('SELECT user_log.userid,user_log.created_at,users.email,users.role FROM user_log left join users on user_log.userid = users.id');
         foreach ($loggedInUsers as $key => $value) {
-            if (strpos($key, 'email') !== false) {
-                $userId = str_replace('email_', '', $key);
-                $loginDetails[] = [
-                    'email' => $value,
-                    'role' => Session::get("role_$userId") == 1 ? 'Admin' : 'Normal User',
-                    'login_time' => Session::get("login_time_$userId")
-                ];
-            }
+            $loginDetails[]= [
+                'email'=>$value->email,
+                'role'=>$value->role == 1 ? 'Admin' : 'Normal User',
+                'login_time'=>$value->created_at,
+            ];
         }
-
         return view('admin.user-login-details', compact('loginDetails'));
     }
 
