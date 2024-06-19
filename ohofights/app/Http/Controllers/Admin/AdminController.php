@@ -251,8 +251,7 @@ class AdminController extends Controller
         return view('admin.userdetails', compact('users', 'loggedInUsers'));
     } 
 
-    public function userRegisterDetails()
-    {
+    public function userRegisterDetails() {
         // Fetch all users
         $users = DB::table('users')->where('role', 2)->get();
 
@@ -262,7 +261,7 @@ class AdminController extends Controller
         return view('admin.user-register-details', compact('users', 'normalUserCount'));
     }
 
-    public function userLoginDetails(){
+    public function userLoginDetails() {
         // Fetch currently logged-in users from the session
         $loggedInUsers = Session::all();
 

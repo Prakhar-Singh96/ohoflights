@@ -37,7 +37,15 @@
                                     </tr>
                                     <tr>
                                         <th>Role:</th>
-                                        <td>{{ Session::get("role_" . Session::get('userid')) }}</td>
+                                        <td>
+                                            @if(Session::get("role_" . Session::get('userid')) == 1)
+                                                Admin
+                                            @elseif(Session::get("role_" . Session::get('userid')) == 2)
+                                                User
+                                            @else
+                                                {{ Session::get("role_" . Session::get('userid')) }}
+                                            @endif
+                                        </td>
                                     </tr>
                                     <tr>
                                         <th>Last Login Time:</th>
