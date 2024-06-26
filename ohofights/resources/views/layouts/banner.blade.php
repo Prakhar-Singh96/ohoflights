@@ -111,7 +111,8 @@
                                 </div>
                                 <div class="tab-content">
                                     <div id="Flights" class="tab-pane fade in active show">
-                                        <form>
+                                        <form action="searchFlight" id="searchFlightForm" method="post">
+                                            @csrf
                                             <div class="BookingBox">
                                                 <div class="row">
                                                     <div class="col-lg-6">
@@ -119,16 +120,26 @@
                                                             <div class="row">
                                                                 <div class="col-md-6">
                                                                     <div class="BookingFrom">
-                                                                        <label>From</label>
-                                                                        <input type="" name="" class="form-control" value="Delhi" placeholder="Delhi" />
-                                                                        <span>DEL International Airport...</span>
+                                                                        <label>Book From</label>
+                                                                        <!-- <input type="" name="" class="form-control" value="Delhi" placeholder="Delhi" /> -->
+                                                                         <select name="from_dest" id="from_dest">
+                                                                            <option value="">----Select From----</option>
+                                                                            <option value="DEL">Delhi International Airport</option>
+                                                                            <option value="BOM">Chattrapati Shivaji Airport</option>
+                                                                         </select>
+                                                                        <!-- <span>DEL International Airport...</span> -->
                                                                     </div>
                                                                 </div>
                                                                 <div class="col-md-6">
                                                                     <div class="BookingFrom">
-                                                                        <label>From</label>
-                                                                        <input type="" name="" class="form-control" value="Bangalore" placeholder="Mumbai" />
-                                                                        <span>BLR International Airport...</span>
+                                                                        <label>Book To</label>
+                                                                        <!-- <input type="" name="" class="form-control" value="Delhi" placeholder="Delhi" /> -->
+                                                                         <select name="to_dest" id="to_dest">
+                                                                            <option value="">----Select To----</option>
+                                                                            <option value="DEL">Delhi International Airport</option>
+                                                                            <option value="BOM">Chattrapati Shivaji Airport</option>
+                                                                         </select>
+                                                                        <!-- <span>DEL International Airport...</span> -->
                                                                     </div>
                                                                 </div>
                                                             </div>
@@ -136,21 +147,22 @@
                                                     </div>
                                                     <div class="col-lg-6">
                                                         <div class="row">
-                                                            <div class="col-lg-8 col-md-7">
+                                                            <div class="col-lg-5 col-md-7">
                                                                 <div class="BokkingDate BookingFrom p-0">
                                                                     <div class="BookingFrom m-0">
                                                                         <label>Journey Date</label>
-                                                                        <input type="date" name="" class="form-control" />
-                                                                        <span>Wednesday</span>
+                                                                        <!-- <input type="date" name="" class="form-control" /> -->
+                                                                         <input type="date" name="search_date" id="search_date">
+                                                                        <!-- <span>Wednesday</span> -->
                                                                     </div>
-                                                                    <div class="BookingFrom m-0">
-                                                                        <label>Return Date</label>
-                                                                        <input type="date" name="" class="form-control" />
-                                                                        <span>Friday</span>
-                                                                    </div>
+                                                                    <!-- <div class="BookingFrom m-0"> -->
+                                                                        <!-- <label>Return Date</label> -->
+                                                                        <!-- <input type="date" name="" class="form-control" /> -->
+                                                                        <!-- <span>Friday</span> -->
+                                                                    <!-- </div> -->
                                                                 </div>
                                                             </div>
-                                                            <div class="col-lg-4 col-md-5">
+                                                            <div class="col-lg-7 col-md-5">
                                                                 <div class="BookingFrom">
                                                                     <label>Travellers</label>
                                                                     <select class="form-control">
@@ -158,7 +170,7 @@
                                                                         <option>Children 1+2+3</option>
                                                                         <option>Infants 1+2+3</option>
                                                                     </select>
-                                                                    <span>Economy</span>
+                                                                    <!-- <span>Economy</span> -->
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -168,7 +180,9 @@
                                                 <div class="view-all">
                                                     <div class="row">
                                                         <div class="col-12">
-                                                            <a href=""><img src="images/search.png" /> Search</a>
+                                                            <!-- <a href="searchFlight"><img src="images/search.png" /> Search</a> -->
+                                                             <button id="searchFlightbtn" class="btn btn-primary" type="button">Search</button>
+                                                             <span id="loaderSearch" style="color:blue;"></span>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -376,6 +390,9 @@
                                             </div>
                                         </form>
                                     </div>
+                                </div>
+                                <div class="flight_list">
+                                    
                                 </div>
                             </div>
                         </div>
@@ -782,3 +799,99 @@
                     </div>
                 </div>
             </section>
+
+<script>
+    $('#searchFlightbtn').click(function(){
+        $(this).hide();
+        $('#loaderSearch').html('Please wait....');
+
+        $.ajax({
+            headers: {
+            'X-CSRF-TOKEN': $('input[name=_token]').val()
+            },
+            url : "searchFlight",
+            data : $('#searchFlightForm').serialize(),
+            type : 'POST',
+            dataType : 'json',
+            success : function(result){
+                // if(result.errorMsg != '' || result.errorEmail != '' || result.errorPassword != ''){
+                //     $('#loginbtn').show();
+                // }
+                $('#loaderSearch').hide();
+                var data = result[0].data;
+                $.each(data, function(key,val) {             
+                     var departureDate = val.itineraries[0].segments[0].departure.at.split('T');
+                     var departureTime = departureDate[1];
+                     var departFrom = val.itineraries[0].segments[0].departure.iataCode;
+                     var arrivalDate = val.itineraries[0].segments[0].arrival.at.split('T');
+                     var arrivalTime = arrivalDate[1];
+                     var departTerminal = val.itineraries[0].segments[0].departure.terminal
+                     var arrivalTerminal = val.itineraries[0].segments[0].arrival.terminal
+                     var arrivalTo = val.itineraries[0].segments[0].arrival.iataCode;
+                     var duration = val.itineraries[0].duration.split('H');
+                     var durationMinute = duration[1];
+                     var durationHour   = duration[0].replace('PT','');
+                     var farePrice  = val.price.total;
+                     var numberOfStops = val.itineraries[0].segments[0].numberOfStops;
+                     var carrierCode = val.itineraries[0].segments[0].carrierCode;
+                     if(numberOfStops == ''){
+                        numberOfStops = 'Non-stop';
+                     }else{
+                        numberOfStops = numberOfStops+' stop';
+                     }
+                     console.log('du ho '+durationHour);
+                    $('.flight_list').append(
+                        '<div class="row" style="padding-top:20px">\
+                            <div class="col-md-2">\
+                                '+carrierCode+'<br>\
+                                <span>'+val.itineraries[0].segments[0].aircraft.code+val.itineraries[0].segments[0].number+'</span>\
+                            </div>\
+                            <div class="col-md-2">\
+                                '+departureTime+'\
+                                <br>'+departFrom+'\
+                            </div>\
+                            <div class="col-md-2">\
+                                '+durationHour+'h:'+durationMinute+'\
+                                <br>'+numberOfStops+'\
+                            </div>\
+                            <div class="col-md-2">\
+                                '+arrivalTime+'\
+                                <br>'+arrivalTo+'\
+                            </div>\
+                            <div class="col-md-2">\
+                                ₹'+farePrice+'\
+                            </div>\
+                            <div class="col-md-2">\
+                                <button class="btn btn-primary">Book Flight</button>\
+                            </div>\
+                        </div>'
+                    );  
+                });    
+                // $('#errorMsg').html(result.errorMsg);
+                // $('#errorMsg').css('color','red');
+                // if(result.errorEmail){
+                //     $('.errorEmail').html(result.errorEmail);
+                // }
+                // if(result.errorPassword){
+                //     $('.errorPassword').html(result.errorPassword);
+                // }
+                // if(result.errorPasswordC){
+                //     $('#errorMsg').html(result.errorPasswordC);
+                // }
+                // setTimeout(() => {
+                //     $('#errorMsg').html('');
+                //     $('.errorPassword').html('');
+                //     $('.errorEmail').html('');
+                // }, 7000);
+                // if(result.code == 200 || result.code == 201){
+                //     $('#loginbtn').hide();
+                //     $('#errorMsg').html(result.msg);
+                //     $('#errorMsg').css('color','green');
+                //     setTimeout(() => {
+                //         window.location.href = result.url;
+                //     }, 2000);
+                // }
+            }
+        });
+});
+</script>

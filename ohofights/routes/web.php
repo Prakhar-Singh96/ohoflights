@@ -36,7 +36,11 @@ Route::get('about-us',[AdminController::class,'aboutUs']);
 Route::get('logout', [AdminController::class,'logout']);
 Route::get('profile', [AdminController::class,'profile']);
 //Route::get('admin/dashboard', [AdminController::class,'dashboard']);
-
+Route::post('searchFlight',[AdminController::class,'searchFlight']);
+Route::get('flight-listing',[AdminController::class,'flightListPage']);
+Route::get('hotel-listing',[AdminController::class,'contactListPage']);
+Route::get('contact',[AdminController::class,'contactListPage']);
+Route::get('listing',[AdminController::class,'normalListPage']);
 /** By Prakhar */
 Route::get('/', [HomePageController::class, 'index'])->name('home');
 Route::get('/', [LoginController::class, 'showLoginForm'])->name('login');

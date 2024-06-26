@@ -33,6 +33,110 @@ class AdminController extends Controller
         // </form>';
         
     }
+    public function flightListPage(){
+        return view('flight-listing');
+    }
+    public function hotelListPage(){
+        return view('hotel-listing');
+    }
+    public function contactListPage(){
+        return view('contact');
+    }
+    public function normalListPage(){
+        return view('listing');
+    }
+    public function searchFlight(){
+        $from_dest = $_POST['from_dest'];
+        $to_dest = $_POST['to_dest'];
+        $search_date = $_POST['search_date'];
+        $getAccessToken = $this->generate_access_token();
+        $access_token = json_decode($getAccessToken)->access_token;
+        return $this->curl_search_flight($from_dest, $to_dest, $search_date,$access_token);
+    }
+    public static function generate_access_token(){
+        $curl2 = curl_init();
+
+        curl_setopt_array($curl2, array(
+        CURLOPT_URL => 'https://test.api.amadeus.com/v1/security/oauth2/token',
+        CURLOPT_RETURNTRANSFER => true,
+        CURLOPT_ENCODING => '',
+        CURLOPT_MAXREDIRS => 10,
+        CURLOPT_TIMEOUT => 0,
+        CURLOPT_FOLLOWLOCATION => true,
+        CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+        CURLOPT_CUSTOMREQUEST => 'POST',
+        CURLOPT_POSTFIELDS => 'grant_type=client_credentials&client_id=AAwA8YaaXXbSaAX8mLJqfo9LyzkRPn7C&client_secret=QhlJZlKWKPhDldov',
+        CURLOPT_HTTPHEADER => array(
+        'Content-Type: application/x-www-form-urlencoded'
+        ),
+        ));
+
+        $response2 = curl_exec($curl2);
+
+        curl_close($curl2);
+        return $response2;
+    }
+    public static function curl_search_flight($from_dest='',$to_dest='',$search_date='',$access_token=''){
+        $curl = curl_init();
+        curl_setopt_array($curl, array(
+        CURLOPT_URL => 'https://test.api.amadeus.com/v2/shopping/flight-offers',
+        CURLOPT_RETURNTRANSFER => true,
+        CURLOPT_ENCODING => '',
+        CURLOPT_MAXREDIRS => 10,
+        CURLOPT_TIMEOUT => 0,
+        CURLOPT_FOLLOWLOCATION => true,
+        CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+        CURLOPT_CUSTOMREQUEST => 'POST',
+        CURLOPT_POSTFIELDS =>'{
+        "currencyCode": "INR",
+        "originDestinations": [
+            {
+            "id": "1",
+            "originLocationCode": "'.$from_dest.'",
+            "destinationLocationCode": "'.$to_dest.'",
+            "departureDateTimeRange": {
+                "date": "'.$search_date.'",
+                "time": "10:00:00"
+            }
+            }
+        ],
+        "travelers": [
+            {
+            "id": "1",
+            "travelerType": "ADULT"
+            }
+        ],
+        "sources": [
+            "GDS"
+        ],
+        "searchCriteria": {
+            "maxFlightOffers": 10,
+            "flightFilters": {
+            "cabinRestrictions": [
+                {
+                "cabin": "ECONOMY",
+                "coverage": "MOST_SEGMENTS",
+                "originDestinationIds": [
+                    "1"
+                ]
+                }
+            ]
+            }
+        }
+        }',
+        CURLOPT_HTTPHEADER => array(
+            'Content-Type: application/json',
+            'Authorization: Bearer '.$access_token.''
+        ),
+        ));
+
+        $response = curl_exec($curl);
+
+        curl_close($curl);
+        return json_encode([
+           json_decode($response)
+        ]);
+    }
     public function registerByAdmin(){        
         $email = $_REQUEST['email'];
         $password = $_REQUEST['password'];

@@ -22,15 +22,15 @@
                             <a class="nav-link" class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Services</a>
                             <div class="dropdown-menu">
                                 <ul>
-                                    <li><a href="https://ohoflights.com/flight-listing.html">Flights</a></li>
-                                    <li><a href="https://ohoflights.com/hotel-listing.html">Hotels</a></li>
+                                    <li><a href="flight-listing">Flights</a></li>
+                                    <li><a href="hotel-listing">Hotels</a></li>
                                     <li><a href="#packages">Packages</a></li>
                                     <li><a href="#railways">Railways</a></li>
                                 </ul>
                             </div>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="https://ohoflights.com/contact.html">Contact Us</a>
+                            <a class="nav-link" href="contact">Contact Us</a>
                         </li>
                     </ul>
                 </div>
